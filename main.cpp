@@ -120,31 +120,33 @@ sf::Vector2f compute_next_position(const Moving_ball &b, sf::Time delta_time){
 
 bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	//TODO check opening angle for solving bug 
-	/*
-	sf::Vector2f dist;
-	dist.x = abs(b.getPosition().x - r.getPosition().x + r.getSize().x / 2);
-	dist.y = abs(b.getPosition().y - r.getPosition().y + r.getSize().y / 2);
-	if (dist.x > (r.getSize().x / 2 + b.getRadius())){
-		return false;
-	}
 	
-	if (dist.y > (r.getSize().y / 2 + b.getRadius())){
-		return false;
+	for(float alpha = 0. ; alpha < M_PI / 2 ; alpha += 0.001){
+		float ver = sin(alpha) * b.getRadius(); 
+		float hor = cos(alpha) * b.getRadius();
+
+		sf::Vector2f pq,pz;
+		pq.y = b.getPosition().y + b.getRadius() - ver;
+		pq.x = b.getPosition().x + b.getRadius() - hor;
+
+		pz.y = b.getPosition().y + b.getRadius() + ver;
+		pz.x = b.getPosition().x + b.getRadius() - hor;
+
+		if (fabs(pq.x - r.getPosition().x + r.getSize().x) < 1.
+		|| fabs(pq.y - r.getPosition().y + r.getSize().y) < 1.){
+			return true;
+		}
+		else if (fabs(pz.x - r.getPosition().x + r.getSize().x) < 1.
+		|| fabs(pz.y - r.getPosition().y < 1.)){
+			return true;
+		}
+	
+
 	}
-	if (dist.x <= (r.getSize().x / 2)){
-		return true;
-	}
-	if (dist.y <= (r.getSize().y / 2)){
-		return true;
-	}
-
-	float sq = pow(dist.x - r.getSize().x / 2, 2);
-	sq += pow(dist.y - r.getSize().y / 2, 2);
-
-	return (sq <= pow(b.getRadius(), 2));
-	*/
 
 
+
+/*
 	if (fabs((b.getRadius() * 2) + b.getPosition().x - r.getPosition().x) < 1.
 	&& b.getPosition().y > r.getPosition().y && b.getPosition().y < r.getPosition().y + r.getSize().y){
 		return true;
@@ -156,7 +158,7 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	}
 
 	return false;
-	
+	*/
 } 
 
 bool is_in_collision(const sf::RectangleShape &r){
@@ -271,6 +273,7 @@ int main()
 			ball.setPosition(temp_ball.getPosition());
 		}
 
+
 		//collision for rectangles and sides
 		if (!is_in_collision(temp_rd)){
 			rd.setPosition(temp_rd.getPosition());
@@ -280,18 +283,7 @@ int main()
 		}
 
 
-
-
-
-		//update velocity of ball
-		if (ball.get_velocity() < 170){
-			ball.set_velocity(ball.get_velocity() + BALL_STEP_VELOCITY);
-		}
 		std::cout << ball.get_velocity() << std::endl;
-		//Check whether ball went off screen
-		/*if (ball.get_ball_is_lost()){
-			ball.setPosition(0,0);
-		}*/
 
 
 

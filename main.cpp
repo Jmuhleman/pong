@@ -132,17 +132,19 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 		pz.y = b.getPosition().y + b.getRadius() + ver;
 		pz.x = b.getPosition().x + b.getRadius() - hor;
 
-		if (fabs(pq.x - r.getPosition().x + r.getSize().x) < 1.
-		|| fabs(pq.y - r.getPosition().y + r.getSize().y) < 1.){
+		float hyp = hypot(fabs(pq.x - r.getPosition().x + r.getSize().x), fabs(pq.y - r.getPosition().y + r.getSize().y));
+		float hyp2 = hypot(fabs(pz.x - r.getPosition().x + r.getSize().x), fabs(pz.y - r.getPosition().y));
+
+		if (hyp < 100.){
 			return true;
 		}
-		else if (fabs(pz.x - r.getPosition().x + r.getSize().x) < 1.
-		|| fabs(pz.y - r.getPosition().y < 1.)){
+		else if (hyp2 < 100.){
 			return true;
 		}
 	
 
 	}
+
 
 
 
@@ -159,7 +161,7 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 
 	return false;
 	*/
-} 
+}
 
 bool is_in_collision(const sf::RectangleShape &r){
 	if (r.getPosition().y < 0){

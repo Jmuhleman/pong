@@ -127,6 +127,7 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	if (dist.x > (r.getSize().x / 2 + b.getRadius())){
 		return false;
 	}
+	
 	if (dist.y > (r.getSize().y / 2 + b.getRadius())){
 		return false;
 	}
@@ -142,6 +143,7 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 
 	return (sq <= pow(b.getRadius(), 2));
 	*/
+
 
 	if (fabs((b.getRadius() * 2) + b.getPosition().x - r.getPosition().x) < 1.
 	&& b.getPosition().y > r.getPosition().y && b.getPosition().y < r.getPosition().y + r.getSize().y){
@@ -258,8 +260,11 @@ int main()
 			ball.set_new_trajectory();
 		}
 		//collision ball with sides
-		else if (is_in_collision(temp_ball)){
+		else if (is_in_collision(temp_ball) && !temp_ball.get_ball_is_lost()){
 			ball.set_new_trajectory();
+		}
+		else if (is_in_collision(temp_ball) && temp_ball.get_ball_is_lost()){
+			ball.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 		}
 		//updating position of ball
 		else{

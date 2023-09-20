@@ -128,17 +128,17 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	pq.x += b.getRadius();
 	pq.y += b.getRadius();
 
-	if (b.getPosition().x < r.getPosition().x){
+	if (b.getPosition().x + b.getRadius() < r.getPosition().x){
 		pq.x = r.getPosition().x;
 	}
-	else if (b.getPosition().x > r.getPosition().x + r.getSize().x){
+	else if (b.getPosition().x + b.getRadius() > r.getPosition().x + r.getSize().x){
 		pq.x = r.getPosition().x + r.getSize().x;
 	}
 	
-	if (b.getPosition().y < r.getPosition().y){
+	if (b.getPosition().y + b.getRadius() < r.getPosition().y){
 		pq.y = r.getPosition().y;
 	}
-	else if (b.getPosition().y > r.getPosition().y + r.getSize().y){
+	else if (b.getPosition().y + b.getRadius() > r.getPosition().y + r.getSize().y){
 		pq.y = r.getPosition().y + r.getSize().y;
 	}
 

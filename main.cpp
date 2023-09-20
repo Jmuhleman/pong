@@ -123,6 +123,7 @@ sf::Vector2f compute_next_position(const Moving_ball &b, sf::Time delta_time){
 bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	
 	// detecting which side of rectangle is the ball located
+	//https://www.jeffreythompson.org/collision-detection/circle-rect.php
 	sf::Vector2f pq = b.getPosition();
 	pq.x += b.getRadius();
 	pq.y += b.getRadius();
@@ -145,31 +146,7 @@ bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
 	pz.x = b.getPosition().x + b.getRadius() - pq.x;
 	pz.y = b.getPosition().y + b.getRadius() - pq.y;
 
-	float d = hypot(pz.x, pz.y);
-
-	if (d <= b.getRadius()){
-		return true;
-	}
-	else{
-		return false;
-	}
-	
-
-
-
-/*
-	if (fabs((b.getRadius() * 2) + b.getPosition().x - r.getPosition().x) < 1.
-	&& b.getPosition().y > r.getPosition().y && b.getPosition().y < r.getPosition().y + r.getSize().y){
-		return true;
-	}
-
-	else if (fabs((r.getPosition().x + r.getSize().x - b.getPosition().x)) < 1.
-	&& b.getPosition().y > r.getPosition().y && b.getPosition().y < r.getPosition().y + r.getSize().y){
-		return true;
-	}
-
-	return false;
-	*/
+	return hypot(pz.x, pz.y) <= b.getRadius();
 }
 
 bool is_in_collision(const sf::RectangleShape &r){

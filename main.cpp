@@ -3,20 +3,20 @@
 #include <cmath>
 #include <random>
 
-#define MAX_BOUNCING_ANGLE_RL 5.
-#define MIN_BOUNCING_ANGLE_RL -5.
+#define MAX_BOUNCING_ANGLE_RL 3.
+#define MIN_BOUNCING_ANGLE_RL -3.
 #define MAX_BOUNCING_ANGLE_TD 12.
 #define MIN_BOUNCING_ANGLE_TD -12.
 
-#define WINDOW_X 1200
-#define WINDOW_Y 800
+#define WINDOW_X 1800
+#define WINDOW_Y 900
 
-#define BALL_RADIUS 60.
-#define BALL_START_VELOCITY 130.
+#define BALL_RADIUS 20.
+#define BALL_START_VELOCITY 220.
 #define BALL_START_ANGLE 155.
 #define BALL_STEP_VELOCITY 0.005
-#define BALL_START_POSITION_X WINDOW_X / 2 -BALL_RADIUS
-#define BALL_START_POSITION_Y WINDOW_Y / 2 -BALL_RADIUS
+#define BALL_START_POSITION_X WINDOW_X / 2 - BALL_RADIUS
+#define BALL_START_POSITION_Y WINDOW_Y / 2 - BALL_RADIUS
 
 enum class SIDE{
 	TOP,
@@ -65,12 +65,12 @@ class Moving_ball: public sf::CircleShape{
 				ball_angle += d1(gen);
 			}
 			else if (last_collision == SIDE::TOP){
-				ball_angle -= M_PI / 2;
+				ball_angle -= M_PI+M_PI/6;
 				ball_angle += d2(gen);
 			}
 
 			else if (last_collision == SIDE::DOWN){
-				ball_angle += M_PI / 2;
+				ball_angle += M_PI+M_PI/6;
 				ball_angle += d2(gen);
 			}
 			else{
@@ -254,9 +254,10 @@ int main()
 			ball.set_new_trajectory();
 		}
 		else if (is_in_collision(temp_ball) && temp_ball.get_ball_is_lost()){
-			ball.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+			//re throw ball
+			ball.setPosition(BALL_START_POSITION_X, BALL_START_POSITION_Y);
 		}
-		//updating position of ball
+		//updating position of ball if no events
 		else{
 			ball.setPosition(temp_ball.getPosition());
 		}

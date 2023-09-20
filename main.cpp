@@ -11,10 +11,12 @@
 #define WINDOW_X 1200
 #define WINDOW_Y 800
 
-#define BALL_RADIUS 30.
-#define BALL_START_VELOCITY 175.
-#define BALL_START_ANGLE 120.
+#define BALL_RADIUS 60.
+#define BALL_START_VELOCITY 130.
+#define BALL_START_ANGLE 155.
 #define BALL_STEP_VELOCITY 0.005
+#define BALL_START_POSITION_X WINDOW_X / 2 -BALL_RADIUS
+#define BALL_START_POSITION_Y WINDOW_Y / 2 -BALL_RADIUS
 
 enum class SIDE{
 	TOP,
@@ -119,32 +121,39 @@ sf::Vector2f compute_next_position(const Moving_ball &b, sf::Time delta_time){
 }
 
 bool is_in_collision(const Moving_ball &b, const sf::RectangleShape &r){
-	//TODO check opening angle for solving bug 
 	
-	for(float alpha = 0. ; alpha < M_PI / 2 ; alpha += 0.001){
-		float ver = sin(alpha) * b.getRadius(); 
-		float hor = cos(alpha) * b.getRadius();
+	// detecting which side of rectangle is the ball located
+	sf::Vector2f pq = b.getPosition();
+	pq.x += b.getRadius();
+	pq.y += b.getRadius();
 
-		sf::Vector2f pq,pz;
-		pq.y = b.getPosition().y + b.getRadius() - ver;
-		pq.x = b.getPosition().x + b.getRadius() - hor;
-
-		pz.y = b.getPosition().y + b.getRadius() + ver;
-		pz.x = b.getPosition().x + b.getRadius() - hor;
-
-		float hyp = hypot(fabs(pq.x - r.getPosition().x + r.getSize().x), fabs(pq.y - r.getPosition().y + r.getSize().y));
-		float hyp2 = hypot(fabs(pz.x - r.getPosition().x + r.getSize().x), fabs(pz.y - r.getPosition().y));
-
-		if (hyp < 100.){
-			return true;
-		}
-		else if (hyp2 < 100.){
-			return true;
-		}
+	if (b.getPosition().x < r.getPosition().x){
+		pq.x = r.getPosition().x;
+	}
+	else if (b.getPosition().x > r.getPosition().x + r.getSize().x){
+		pq.x = r.getPosition().x + r.getSize().x;
+	}
 	
-
+	if (b.getPosition().y < r.getPosition().y){
+		pq.y = r.getPosition().y;
+	}
+	else if (b.getPosition().y > r.getPosition().y + r.getSize().y){
+		pq.y = r.getPosition().y + r.getSize().y;
 	}
 
+	sf::Vector2f pz;
+	pz.x = b.getPosition().x + b.getRadius() - pq.x;
+	pz.y = b.getPosition().y + b.getRadius() - pq.y;
+
+	float d = hypot(pz.x, pz.y);
+
+	if (d <= b.getRadius()){
+		return true;
+	}
+	else{
+		return false;
+	}
+	
 
 
 
@@ -207,7 +216,7 @@ int main()
 
 	Moving_ball ball(BALL_RADIUS, BALL_START_ANGLE, BALL_START_VELOCITY);
 	ball.setFillColor(sf::Color(0,0,0));
-	ball.setPosition(sf::Vector2f(float(window.getSize().x / 2), float(window.getSize().y / 2 )));
+	ball.setPosition(BALL_START_POSITION_X, BALL_START_POSITION_Y);
 
 	sf::RectangleShape rg(sf::Vector2f(35 ,100));
 	rg.setFillColor(sf::Color(0, 150, 0));
@@ -284,8 +293,6 @@ int main()
 			rg.setPosition(temp_rg.getPosition());
 		}
 
-
-		std::cout << ball.get_velocity() << std::endl;
 
 
 

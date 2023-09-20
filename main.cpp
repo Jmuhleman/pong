@@ -12,9 +12,9 @@
 #define WINDOW_Y 900
 
 #define BALL_RADIUS 20.
-#define BALL_START_VELOCITY 220.
+#define BALL_START_VELOCITY 260.
 #define BALL_START_ANGLE 155.
-#define BALL_STEP_VELOCITY 0.005
+#define BALL_STEP_VELOCITY 1.
 #define BALL_START_POSITION_X WINDOW_X / 2 - BALL_RADIUS
 #define BALL_START_POSITION_Y WINDOW_Y / 2 - BALL_RADIUS
 
@@ -76,14 +76,16 @@ class Moving_ball: public sf::CircleShape{
 			else{
 				ball_angle += M_PI * d2(gen);
 			}
+			ball_velocity += BALL_STEP_VELOCITY;
 			
 		}
 		void set_ball_is_lost(bool a){
 			ball_is_lost = a;
 		}
 		bool get_ball_is_lost(){return ball_is_lost;}
-		double get_velocity()const{return ball_velocity;};
-		double get_angle()const{return ball_angle;};
+		double get_velocity()const{return ball_velocity;}
+		double get_angle()const{return ball_angle;}
+		SIDE get_last_collision(){return last_collision;}
 	private:
 		SIDE last_collision;
 		bool ball_is_lost;
@@ -192,15 +194,15 @@ int main()
 	//declaration of graphics elements
 
 	Moving_ball ball(BALL_RADIUS, BALL_START_ANGLE, BALL_START_VELOCITY);
-	ball.setFillColor(sf::Color(0,0,0));
+	ball.setFillColor(sf::Color::White);
 	ball.setPosition(BALL_START_POSITION_X, BALL_START_POSITION_Y);
 
-	sf::RectangleShape rg(sf::Vector2f(35 ,100));
-	rg.setFillColor(sf::Color(0, 150, 0));
+	sf::RectangleShape rg(sf::Vector2f(50 ,340));
+	rg.setFillColor(sf::Color::Magenta);
 	rg.setPosition(sf::Vector2f(0,0));
 
-	sf::RectangleShape rd(sf::Vector2f(35 ,100));
-	rd.setFillColor(sf::Color(150, 0, 150));
+	sf::RectangleShape rd(sf::Vector2f(50 ,340));
+	rd.setFillColor(sf::Color::Green);
 	rd.setPosition(sf::Vector2f(float(window.getSize().x - rd.getSize().x) , float(window.getSize().y - rd.getSize().y)));
 
 
@@ -255,6 +257,13 @@ int main()
 		}
 		else if (is_in_collision(temp_ball) && temp_ball.get_ball_is_lost()){
 			//re throw ball
+			if (temp_ball.get_last_collision() == SIDE::RIGHT){
+				rd.setSize(sf::Vector2f(rd.getSize().x, rd.getSize().y - 20));
+			}
+			else if (temp_ball.get_last_collision() == SIDE::LEFT){
+				rg.setSize(sf::Vector2f(rg.getSize().x, rg.getSize().y - 20));
+			}
+
 			ball.setPosition(BALL_START_POSITION_X, BALL_START_POSITION_Y);
 		}
 		//updating position of ball if no events
@@ -280,7 +289,7 @@ int main()
 		elements.push_event(ball);
 
 
-		window.clear(sf::Color::White);
+		window.clear(sf::Color::Black);
 		elements.paintElements(window);
 		window.display();
 
